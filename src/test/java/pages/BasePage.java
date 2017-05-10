@@ -26,15 +26,14 @@ public class BasePage {
     @FindBy(xpath = "//android.widget.ImageButton[@content-desc = 'Navigate up']")
     protected WebElement backButton;
 
-    @FindBy(id = "in.swiggy.android:id/restaurant_layout")
+    @FindBy(id = "restaurant_layout")
     protected List<WebElement> restaurants;
 
-    @FindBy(id = "in.swiggy.android:id/fragment_restaurant_menu_layout_menu_items_recycler_view")
+    @FindBy(id = "fragment_restaurant_menu_layout_menu_items_recycler_view")
     private List<WebElement> menu;
 
-    public BasePage() {
-
-    }
+    @FindBy(id = "permission_deny_button")
+    private WebElement permissionDenyButton;
 
     public BasePage(AppiumDriver driver) {
         this.driver = driver;
@@ -462,6 +461,8 @@ public class BasePage {
     }
 
     Restaurant findARestaurant(int count) {
+        scrollDown();
+//        waitForElementsToBeVisible(restaurants);
         WebElement restaurantEle = getRestaurantElement(count);
         return buildRestaurant(restaurantEle);
     }
@@ -469,15 +470,22 @@ public class BasePage {
     Restaurant buildRestaurant(WebElement restaurant) {
         return new RestaurantBuilder()
                 .withName(getElementText(restaurant, Bys.restaurantName))
-                .withRating(getElementText(restaurant, Bys.restaurantRating))
-                .withRestaurantCuisines(getElementText(restaurant, Bys.restaurantCuisine))
-                .withDeliveryTime(getElementText(restaurant, Bys.restaurantDeliveryTime))
                 .build();
     }
 
     protected WebElement getRestaurantElement(int restaurantCount) {
         WebElement restaurant = restaurants.get(restaurantCount);
         return restaurant;
+    }
+
+    public void denyPermission(){
+        try {
+            waitForElementToBeVisible(permissionDenyButton);
+            permissionDenyButton.click();
+        }
+        catch (Exception e){
+
+        }
     }
 
     protected interface Bys {

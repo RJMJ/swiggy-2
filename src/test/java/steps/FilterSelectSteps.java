@@ -2,8 +2,7 @@ package steps;
 
 import cucumber.api.java.en.And;
 import io.appium.java_client.AppiumDriver;
-import pages.FiltersPage;
-import pages.HomePage;
+import pages.*;
 
 public class FilterSelectSteps extends BaseSteps {
 
@@ -11,12 +10,15 @@ public class FilterSelectSteps extends BaseSteps {
         return getDriverInstanceFor("foodie");
     }
 
-    @And("^I tap on filters,select relevant filters and then click on apply filters$")
-    public void iTapOnFiltersAndSelectRelevantFilters(){
-        new HomePage(getDriver()).clickOnFilter();
+    @And("^I apply filters and select a restaurant of my choice$")
+    public void iSelectARestaurantOfMyChoiceWithFiltersApplied(){
+        new HomePage(getDriver()).tapOnRestaurantButton();
+        new HomePage(getDriver()).tapOnFilter();
         new FiltersPage(getDriver()).sortByRating();
         new FiltersPage(getDriver()).setCostLevel();
-        new FiltersPage(getDriver()).selectCuisine();
-        new FiltersPage(getDriver()).clickOnApplyFilterButton();
+        new FiltersPage(getDriver()).tapOnApplyFilterButton();
+        new BasePage(getDriver()).denyPermission();
+        new HomePage(getDriver()).chooseARestaurant();
+        new HomePage(getDriver()).tapOnRestaurant();
     }
 }

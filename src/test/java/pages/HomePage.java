@@ -1,29 +1,33 @@
 package pages;
 
+import Exceptions.RestaurantUnavailableException;
 import entities.Restaurant;
 import io.appium.java_client.AppiumDriver;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+
+import java.util.List;
 
 public class HomePage extends BasePage {
 
     private AppiumDriver driver;
     private Restaurant restaurant;
 
-    @FindBy(id = "in.swiggy.android:id/custom_toolbar_title_container")
+    @FindBy(id = "custom_toolbar_title_container")
     private WebElement customToolbar;
 
-    @FindBy(id = "in.swiggy.android:id/bottom_bar_option_account")
+    @FindBy(id = "bottom_bar_option_account")
     private WebElement accountButton;
 
-    @FindBy(id = "in.swiggy.android:id/bottom_bar_option_restaurants")
+    @FindBy(id = "bottom_bar_option_restaurants")
     private WebElement restaurantButton;
 
-    @FindBy(id = "in.swiggy.android:id/logout_login_button")
+    @FindBy(id = "logout_login_button")
     private WebElement login_logout_button;
 
-    @FindBy(id = "in.swiggy.android:id/activity_restaurant_filter_layout")
+    @FindBy(id = "activity_restaurant_filter_layout")
     private WebElement filter;
 
     public HomePage(AppiumDriver driver) {
@@ -32,52 +36,53 @@ public class HomePage extends BasePage {
         this.driver = driver;
     }
 
-    public void chooseARestaurant() throws InterruptedException {
+    public void chooseARestaurant() {
         try {
-            waitForElementToBeVisible(customToolbar);
-            scrollDownAndFindRestaurant();
+            scrollDownAndFindARestaurant();
         } catch (Exception e) {
-            scrollDownAndFindRestaurant();
+            scrollDownAndFindARestaurant();
         }
     }
 
-    private void scrollDownAndFindRestaurant() {
-        scrollDown();
+    private void scrollDownAndFindARestaurant() {
         System.out.println("Choosing a restaurant");
-        restaurant = findARestaurant(0);
-        System.out.println("Found a restaurant -- " + restaurant.getName());
-        System.out.println("With rating -- " + restaurant.getRating());
-        System.out.println("With cuisines -- " + restaurant.getRestaurantCuisines());
-        System.out.println("With delivery time -- " + restaurant.getDeliveryTime());
+        scrollDown();
+//        restaurant = findARestaurant(0);
+//        System.out.println("Found a restaurant -- " + restaurant.getName());
+//        System.out.println("With rating -- " + restaurant.getRating());
+//        System.out.println("With cuisines -- " + restaurant.getRestaurantCuisines());
+//        System.out.println("With delivery time -- " + restaurant.getDeliveryTime());
     }
 
-    public void clickOnRestaurant() {
+    public void tapOnRestaurant() throws RestaurantUnavailableException{
         try {
-            if (findElement(getRestaurantElement(0), Bys.restaurantChainsFound).isEnabled()) {
-                findElement(getRestaurantElement(0), Bys.restaurantChainsFound).click();
-                findElement(getRestaurantElement(0), Bys.restaurantChainOption).click();
-            }
+            waitForElementToBeVisible(By.id("in.swiggy.android:id/restaurant_layout"));
+            driver.findElement(By.id("in.swiggy.android:id/restaurant_layout")).click();
+//            findElement(getRestaurantElement(0), Bys.restaurantName).click();
         } catch (Exception e) {
-            findElement(getRestaurantElement(0), Bys.restaurantName).click();
+            driver.findElement(By.id("in.swiggy.android:id/restaurant_chains_found")).click();
+            driver.findElement(By.id("in.swiggy.android:id/chain_layout")).click();
+//            findElement(getRestaurantElement(0), Bys.restaurantChainsFound).click();
+//            findElement(getRestaurantElement(0), Bys.restaurantChainOption).click();
         }
     }
 
-    public void clickOnAccount(){
+    public void tapOnAccount() {
         waitForElementToBeClickable(accountButton);
         accountButton.click();
     }
 
-    public void clickOnLoginLogoutButton(){
+    public void tapOnLoginLogoutButton() {
         waitForElementToBeClickable(login_logout_button);
         login_logout_button.click();
     }
 
-    public void clickOnRestaurantButton(){
+    public void tapOnRestaurantButton() {
         waitForElementToBeClickable(restaurantButton);
         restaurantButton.click();
     }
 
-    public void clickOnFilter(){
+    public void tapOnFilter() {
         waitForElementToBeClickable(filter);
         filter.click();
     }
